@@ -74,7 +74,7 @@ def run_gx_validations(df: pd.DataFrame) -> tuple[dict, bool]:
             }
             for r in results
         ],
-        "summary": validation,
+        "summary": validation.to_json_dict(),
     }
     return details, all_success
 
@@ -132,7 +132,11 @@ def validate_patient_age_distribution_gx():
                 f"Échec Great Expectations — voir {report_path} dans le conteneur Airflow."
             )
 
-        return report
+        return {
+            "success": success,
+            "row_count": report["row_count"],
+            "report_path": str(report_path),
+        }
 
     validate_age_distribution()
 
