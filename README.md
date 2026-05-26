@@ -34,7 +34,20 @@ docker compose up -d
 2. Aller dans MinIO et vérifier le bucket `hospital-raw`.
 3. Aller dans Airflow.
 4. Lancer le DAG `ingest_patients_from_minio`.
-5. Vérifier les données dans PostgreSQL.
+5. Lancer le DAG `validate_patient_age_distribution_gx` (Great Expectations — distribution d'âge).
+6. Vérifier les données dans PostgreSQL.
+
+### Qualité des données — âge (Great Expectations)
+
+- DAG : `validate_patient_age_distribution_gx`
+- Librairie : [Great Expectations](https://greatexpectations.io/) (open source)
+- Contrôles : bornes 0–130, moyenne plausible, distribution par tranches vs référence (divergence KL)
+- Rapport JSON : `gx/reports/age_distribution_latest.json` (histogramme + résultat des expectations, pour Grafana ou revue manuelle)
+
+```bash
+# Relire le dernier rapport depuis l'hôte
+type gx\reports\age_distribution_latest.json
+```
 
 ## Vérification SQL
 
