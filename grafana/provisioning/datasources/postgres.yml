@@ -1,16 +1,15 @@
 apiVersion: 1
- 
+
 datasources:
   - name: Hospital PostgreSQL
     type: postgres
     url: postgres-hospital:5432
-    database: hospital_db
     user: hospital_user
     secureJsonData:
       password: hospital_pwd
     jsonData:
+      database: hospital_db      
       sslmode: disable
       postgresVersion: 1700
     isDefault: true
     editable: true
- 
