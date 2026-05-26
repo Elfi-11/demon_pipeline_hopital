@@ -96,7 +96,27 @@ services:
       exec airflow webserver
       "
 
+
+  grafana:
+      image: grafana/grafana:latest
+      container_name: demo_grafana
+      depends_on:
+        postgres-hospital:
+          condition: service_healthy
+      ports:
+        - "3000:3000"
+      environment:
+        GF_SECURITY_ADMIN_USER: admin
+        GF_SECURITY_ADMIN_PASSWORD: admin
+      volumes:
+        - grafana_data:/var/lib/grafana
+        - ./grafana/provisioning:/etc/grafana/provisioning
+      restart: unless-stopped
+
+
+
 volumes:
   postgres_hospital_data:
   minio_data:
   airflow_logs:
+  grafana_data:
