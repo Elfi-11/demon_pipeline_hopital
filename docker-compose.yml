@@ -7,7 +7,7 @@ services:
       POSTGRES_PASSWORD: hospital_pwd
       POSTGRES_DB: hospital_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_hospital_data:/var/lib/postgresql/data
       - ./postgres-init:/docker-entrypoint-initdb.d
@@ -68,6 +68,14 @@ services:
       AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
       AIRFLOW__CORE__EXECUTOR: "SequentialExecutor"
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: "sqlite:////opt/airflow/airflow.db"
+      _AIRFLOW_DB_MIGRATE: "true"
+      _AIRFLOW_WWW_USER_CREATE: "true"
+      _AIRFLOW_WWW_USER_USERNAME: admin
+      _AIRFLOW_WWW_USER_PASSWORD: admin
+      _AIRFLOW_WWW_USER_FIRSTNAME: Admin
+      _AIRFLOW_WWW_USER_LASTNAME: Demo
+      _AIRFLOW_WWW_USER_ROLE: Admin
+      _AIRFLOW_WWW_USER_EMAIL: admin@example.com
       _PIP_ADDITIONAL_REQUIREMENTS: "pandas boto3 psycopg2-binary unidecode great-expectations==0.18.22"
       HOSPITAL_PG_HOST: postgres-hospital
       HOSPITAL_PG_PORT: "5432"
@@ -84,14 +92,6 @@ services:
       - airflow_logs:/opt/airflow/logs
     command: >
       bash -c "
-      airflow db migrate &&
-      airflow users create
-        --username admin
-        --password admin
-        --firstname Admin
-        --lastname Demo
-        --role Admin
-        --email admin@example.com || true &&
       airflow scheduler &
       exec airflow webserver
       "
